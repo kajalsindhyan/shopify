@@ -1,0 +1,543 @@
+broadcast themedocument 
+    .querySelector(".custom-inside-narpine-sct .grid__heading")
+    .addEventListener("click", function () {
+      const cartDrawer = document.querySelector("cart-drawer");
+      if (cartDrawer && typeof cartDrawer.openCartDrawer === "function") {
+        fetch("/cart/add.js", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            id: 44594505482440,
+            quantity: 1,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("Product added to cart:", data);
+ 
+            // Force open the cart drawer
+            if (cartDrawer && typeof cartDrawer.openCartDrawer === "function") {
+              cartDrawer.openCartDrawer(true); // Force open
+            }
+ 
+            // Dispatch event to refresh the cart and capture the updated cart data
+            document.dispatchEvent(
+              new CustomEvent("theme:cart:refresh", {
+                bubbles: true,
+              })
+            );
+          })
+          .catch((err) => {
+            console.error("Error adding to cart:", err);
+          });
+      } else {
+        console.warn("Cart drawer not found or method unavailable.");
+      }
+    });
+
+
+    //Dawn theme
+    Down theme : cart drawer refresh
+fetch('/cart?section_id=cart-drawer')
+    .then((response) => response.text())
+    .then((html) => {
+      const updatedDrawer = new DOMParser().parseFromString(html, 'text/html').querySelector('cart-drawer');
+      // setTimeout(() => {
+      // // window.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+      // //   console.log("page refreshes");
+      // // },1000);
+      setTimeout(() => {
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer && updatedDrawer) {
+          cartDrawer.innerHTML = updatedDrawer.innerHTML;
+ 
+          // ✅ Ensure drawer is marked as empty if needed
+          if (!updatedDrawer.querySelector('.cart-item')) {
+            cartDrawer.classList.add('is-empty');
+          } else {
+            cartDrawer.classList.remove('is-empty');
+          }
+ 
+          cartDrawer.open();
+        }
+      }, 100);
+    })
+    .catch((error) => {
+      console.error('Error refreshing cart:', error);
+    });
+    
+//A star patteren
+for(let i=1;i<7;i++)
+{
+    let str="";
+  for(let j=1;j<=5;j++){
+     if((j==1 || j==5) && i==1 ){
+       str+=' ';
+     }else if (i != 1 && i!=4 && j != 1 && j != 5) {
+        str+=' ';
+     }
+  if ((i == 1 || i==4 ) && j != 1 && j != 5) {
+      str+='*';
+    }else if((j==1 || j==5) && i!=1){
+       str+='*';
+    }
+    
+  }
+  console.log(str);
+}
+
+//B star patteren
+
+    for(let i=1;i<8;i++)
+{
+    let str="";
+  for(let j=1;j<=5;j++){
+  if(i==1||i==4||i==7){
+    if(j==5){
+     str+=' ';
+    }
+    else{
+     str+='*';
+    }
+  }
+  else if(j==1 || j==5){
+    str+='*';
+  }else{
+    str+=' ';
+  }
+  }
+  console.log(str);
+  
+}
+//c star patterenfor(let i=1;i<8;i++)
+{
+    let str="";
+  for(let j=1;j<=5;j++){
+  if(i==1||i==7){
+    if(j==1){
+     str+=' ';
+    }
+    else{
+     str+='*';
+    }
+  }
+  else if(j==1){
+    str+='*';
+  }else{
+    str+=' ';
+  }
+  }
+  console.log(str);
+  
+}
+//D  star patteren
+    for(let i=1;i<8;i++)
+{
+    let str="";
+  for(let j=1;j<=5;j++){
+  if(i==1||i==7){
+    if(j==5){
+     str+=' ';
+    }
+    else{
+     str+='*';
+    }
+  }
+  else if(j==1 || j==5){
+    str+='*';
+  }else{
+    str+=' ';
+  }
+  }
+  console.log(str);
+  
+}
+//E star patteren
+for(let i=1;i<8;i++)
+{
+    let str="";
+  for(let j=1;j<=5;j++){
+  if(i==1||i==4||i==7){
+     str+='*';
+  }
+  else if(j==1){
+    str+='*';
+  }else{
+    str+=' ';
+  }
+  }
+  console.log(str);
+  
+}
+//F star patteren
+    for(let i=1;i<8;i++)
+{
+    let str="";
+  for(let j=1;j<=5;j++){
+  if(i==1||i==4){
+     str+='*';
+  }
+  else if(j==1){
+    str+='*';
+  }else{
+    str+=' ';
+  }
+  }
+  console.log(str);
+  
+}
+//G star patteren
+        for(let i=1;i<8;i++)
+{
+    let str="";
+  for(let j=1;j<=5;j++){
+  if(i==1||i==7){
+     str+='*';
+  }
+  else if(j==1||j==5 ||j==4){
+      if((i==2||i==3)&&(j==5||j==4)){
+          str+=' ';
+      }else if((i==5||i==6)&&(j==4)){
+          str+=' ';
+      }
+      else {
+        str+='*';
+      }
+  }else{
+    str+=' ';
+  }
+  }
+  console.log(str);
+  
+}
+    //H star patteren
+       for(let i=1;i<8;i++)
+{
+    let str="";
+  for(let j=1;j<=5;j++){
+  if(i==4){
+     str+='*';
+  }
+  else if(j==1 || j==5){
+    str+='*';
+  }else{
+    str+=' ';
+  }
+  }
+  console.log(str);
+  
+}
+    //I star patteren
+       for(let i=1;i<8;i++)
+{
+    let str="";
+  for(let j=1;j<=5;j++){
+  if(i==1||i==7){
+     str+='*';
+  }
+  else if(j==3){
+    str+='*';
+  }else{
+    str+=' ';
+  }
+  }
+  console.log(str);
+  
+}
+    //j star patteren
+            for(let i=1;i<8;i++)
+{
+    let str="";
+  for(let j=1;j<=5;j++){
+  if(i==1||i==7||i==6){
+      if((j==4||j==5)&&(i==7)){
+       str+='';
+      }else if(i==6 &&(j==2||j==4||j==5)){
+          str+=' ';
+      }
+      else
+         str+='*';
+      }
+  else if(j==3){
+    str+='*';
+  }else{
+    str+=' ';
+  }
+  }
+  console.log(str);
+  
+}
+    
+//k star patteren
+    var k=5;
+for(i=1;i<=7;i++){
+    if(k<=1){k=3;}
+    var str="";
+    for(j=1;j<=5;j++){
+        if(j==1){
+           str+="*";
+        }else if(j<k || j>k){
+             str+=" ";
+        }else if(j==k){
+         str+="*";
+        }
+    }
+    console.log(str);
+    if(i<5){
+    k--;}
+    else k++;
+}
+
+//L star patteren   
+      var k=5;
+for(i=1;i<=7;i++){
+    var str="";
+    for(j=1;j<=5;j++){
+        if(j==1||i==7){
+           str+="*";
+        }
+    }
+    console.log(str);
+  
+}
+//M star patteren
+for(i=1;i<=7;i++){
+    var str="";
+    for(j=1;j<=7;j++){
+        if(j==1||j==7){
+           str+="*";
+        }else if((i==j)&&i<5){
+            str+="*";
+        }else if((j==(7-i+1)&&i<5)){
+            str+="*";
+        }
+        else
+        str+="_";
+    }
+    console.log(str);
+  
+}      
+//N star patteren
+      for(i=1;i<=7;i++){
+    var str="";
+    for(j=1;j<=7;j++){
+        if(j==1||j==7){
+           str+="*";
+        }else if(i==j){
+            str+="*";
+        }else
+        str+="_";
+    }
+    console.log(str);
+  
+}
+//O star patteren     
+ for(i=1;i<=7;i++){
+    var str="";
+    for(j=1;j<=5;j++){
+        if ((j == 1 || j == 5) && (i != 1 && i != 7)){
+           str+="*";
+        }
+        else if ((j != 1 && j != 5)&&(i == 1 || i == 7)){
+            str+="*";
+        }else
+        str+="_";
+    }
+    console.log(str);
+  
+}     
+//p star patteren
+for(i=1;i<=7;i++){
+    var str="";
+    for(j=1;j<=5;j++){
+        if(i>3&&j==5){
+            str+='_';
+        }
+        else if(i==4 && j<5){
+            str+='*';
+        }
+        else
+        if ((j == 1 || j == 5) && (i != 1)){
+           str+="*";
+        }
+        else if ((j != 1 && j != 5)&&(i == 1)){
+            str+="*";
+        }else
+        str+="_";
+    }
+    console.log(str);
+  
+}      
+//Q star patteren
+for(i=1;i<=8;i++){
+    var str="";
+    for(j=1;j<=5;j++){
+        if(i==8 && j!=5){
+            str+=" ";
+        }else if(i==6 && j!=2 && j!=4){
+            str+="*";
+        }
+        else if ((j == 1 || j == 5) && (i != 1 && i != 7)){
+           str+="*";
+        }
+        else if ((j != 1 && j != 5)&&(i == 1 || i == 7)){
+            str+="*";
+        }else
+        str+=" ";
+    }
+    console.log(str);
+  
+}   
+//R star patteren
+for(i=1;i<=7;i++){
+    var str="";
+    for(j=1;j<=5;j++){
+        
+         if(i==4 && j<5){
+            str+='*';
+        }
+        else if ((j == 1 || j == 5) && (i != 1 && i!=4 )){
+           str+="*";
+        }
+        else if ((j != 1 && j != 5)&&(i == 1)){
+            str+="*";
+        }else
+        str+=" ";
+    }
+    console.log(str);
+  
+}     
+//S star patteren
+for(i=1;i<=7;i++){
+    var str="";
+    for(j=1;j<=5;j++){
+         if ((i == 1 || i == 4 || i==7 ) ){
+           str+="*";
+        }
+       else if((j==1 && i< 4)||(j==5 && i>4)){
+           str+="*";
+       }
+       else
+        str+=" ";
+    }
+    console.log(str);
+  
+}     
+//T star patteren 
+for(i=1;i<=7;i++){
+    var str="";
+    for(j=1;j<=5;j++){
+         if ((i == 1 || j==3 ) ){
+           str+="*";
+        }
+       else
+        str+=" ";
+    }
+    console.log(str);
+  
+}     
+//U star patteren
+for(i=1;i<=7;i++){
+    var str="";
+    for(j=1;j<=5;j++){
+         if (( i==7 && (j==1 || j==5) ) ){
+           str+=" ";
+        }else if(j==1 || j==5){
+            str+="*";
+        }
+       else if(i>6){
+        str+="*";
+       }else
+       str+=" ";
+    }
+    console.log(str);
+  
+}     
+//V star patteren      
+var k=13;
+for(i=1;i<=7;i++){
+    var str="";
+    for(j=1;j<=13;j++){
+        if(j==i||j==k){
+         str+="*"   ;
+        }else
+        str+="_";
+    }
+    console.log(str);
+    k--;
+}
+//W star patteren      
+      
+var x=1;
+var check1=4;
+var check2=4;
+for(i=1;i<=4;i++){
+    var str="";
+    if(i>1){
+    check1=check1-1;
+    check2=check2+1;
+    }
+for(j=1;j<=7;j++)
+{
+if(j==1||j==7){
+str+="*";
+}else if(i==1&&j==4){
+str+="*";
+}
+else if(i>1&&(check1==j||check2==j)){
+str+="*";
+}else{
+str+=" ";
+}
+}
+   console.log(str) ;
+}
+
+
+//X star patteren
+let k=7;
+for(let i=1;i<=7;i++){
+    var str="";
+    for(let j=1;j<=7;j++){
+        if(i==j||j==k){
+            str+="*";
+        }else
+        str+="-";
+    }
+       console.log(str);
+       k--;
+}
+//y star patteren      
+let k=7;
+for(let i=1;i<=7;i++){
+    var str="";
+    for(let j=1;j<=7;j++){
+        if((i==j||j==k) && i<4){
+            str+="*";
+        }else if(i>=4 && j==4){
+            str+="*";
+        }else
+        str+="-";
+    }
+       console.log(str);
+       k--;
+        }else if(i>=4 && j==4){
+
+
+}
+//Z star patteren
+let k=7;
+for(let i=1;i<=7;i++){
+    var str="";
+    for(let j=1;j<=7;j++){
+        if(i==1||i==7||j==k){
+            str+="*";
+        }else
+        str+="-";
+    }
+       console.log(str);
+       k--;
+}          
