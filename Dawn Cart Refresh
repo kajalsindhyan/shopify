@@ -1,0 +1,109 @@
+<div>
+  <p>{{ section.settings.heading }}</p>
+ {% for product in section.settings.collection.products %}
+  <div class="product" data-variant-id="{{ product.variants.first.id }}">
+    <h3>{{ product.title }}</h3>
+    <p>{{ product.price | money }}</p>
+    <button class="add-to-cart-btn">Add to Cart</button>
+  </div>
+{% endfor %}
+</div>
+{% schema %}
+{
+  "name": "Practice Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Welcome to the practice section"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Practice Section"
+    }
+  ]
+}
+{% endschema %}
+
+{% javascript %}
+//Write the JavaScript logic to:Add event listener to each .add-to-cart-btn
+        //On click:
+        //Disable button
+        //Show "Adding..."
+        //Send fetch to /cart/add.js
+        //Then change text to "Added!" and re-enable button
+        //Update #cart-count in header   
+document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+  button.addEventListener('click', function () {
+const parentDiv = button.parentElement; // gets the immediate parent
+// Example: get a custom attribute like data-product-id
+const productId = parentDiv.getAttribute('data-variant-id');
+  // Example data: Replace with actual product variant ID and quantity
+  const data = {
+    id: productId, // Replace with actual variant ID
+    quantity: 1
+  };
+
+  button.disabled = true;
+  button.textContent = 'Adding...';
+
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      return res.json();
+    })
+    .then(response => {
+      console.log("Success:", response);
+      button.textContent = 'Added!';
+      button.disabled = false;
+      fetch('/cart?section_id=cart-drawer')
+    .then((response) => response.text())
+    .then((html) => {
+      const updatedDrawer = new DOMParser().parseFromString(html, 'text/html').querySelector('cart-drawer');
+      // setTimeout(() => {
+      // // window.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+      // //   console.log("page refreshes");
+      // // },1000);
+      setTimeout(() => {
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer && updatedDrawer) {
+          cartDrawer.innerHTML = updatedDrawer.innerHTML;
+ 
+          // ✅ Ensure drawer is marked as empty if needed
+          if (!updatedDrawer.querySelector('.cart-item')) {
+            cartDrawer.classList.add('is-empty');
+          } else {
+            cartDrawer.classList.remove('is-empty');
+          }
+ 
+          cartDrawer.open();
+        }
+      }, 100);
+    })
+    .catch((error) => {
+      console.error('Error refreshing cart:', error);
+    });
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      button.textContent = 'Error!';
+      button.disabled = false;
+    });
+});
+});
+
+{% endjavascript %}
