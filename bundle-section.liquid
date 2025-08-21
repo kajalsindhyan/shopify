@@ -1,0 +1,204 @@
+  <script src="{{ 'bundle.js' | asset_url }}" defer="defer"></script>
+<div class="bundle_wrapper">
+       <div class="product-grid">
+  {% for product in section.settings.collection.products%}
+    <div class="product-card">
+      
+      <!-- Product Image -->
+      <a href="{{ product.url | within: collection }}">
+        {% if product.featured_image %}
+          <img src="{{ product.featured_image | img_url: '200x' }}" alt="{{ product.title }}" class="product-image">
+        {% else %}
+          <img src="{{ 'placeholder-image.png' | asset_url }}" alt="No image" class="product-image">
+        {% endif %}
+      </a>
+
+      <!-- Product Title -->
+      <h3 class="product-title">
+        <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+      </h3>
+
+      <!-- Product Price -->
+      <p class="product-price">
+        {{ product.price | money }}
+      </p>
+      <button class="cstm_btn" prodimg="{{ product.featured_image | img_url: '100x100' }}" prodid="{{ product.variants.first.id }}" prodprice="{{ product.price }}">ADD TO BUNDLE</button>
+        <button  style="display:none;" class="cstm_btn_remove" prodimg="{{ product.featured_image | img_url: '100x100' }}" prodid="{{ product.variants.first.id }}" prodprice="{{ product.price }}">REMOVE</button>
+    </div>
+  {% endfor %}
+</div>
+        <div class="Custom-card-drawer">
+          <div class="bundle-drawer">
+  <h3 class="bundle-title">CUSTOMIZE YOUR BUNDLE!</h3>
+  
+  <!-- Slot 1 -->
+  <div class="bundle-slot bundle-slot-1">
+    <div class="lock-box"></div>
+  </div>
+
+  <!-- Discount Locked Stages -->
+  <div class="bundle-slot bundle-slot-2">
+    <div class="lock-box">
+      <span class="lock-icon">🔒</span>
+      <span class="discount-text">10% OFF</span>
+    </div>
+  </div>
+
+  <div class="bundle-slot bundle-slot-3">
+    <div class="lock-box">
+      <span class="lock-icon">🔒</span>
+      <span class="discount-text">15% OFF</span>
+    </div>
+  </div>
+
+  <div class="bundle-slot bundle-slot-4">
+    <div class="lock-box">
+      <span class="lock-icon">🔒</span>
+      <span class="discount-text">20% OFF</span>
+    </div>
+  </div>
+
+  <!-- Bundle & Save Button -->
+  <button class="bundle-save-button" disabled>BUNDLE & SAVE</button>
+</div>
+
+        </div>
+</div>
+<style>
+  .pro-cross {
+  cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #fff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-weight: bold;
+  z-index: 10;
+}
+
+  .bundle_wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px; /* space between grid and drawer */
+}
+
+/* Product Grid */
+.product-grid {
+  flex: 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+/* Custom Card Drawer */
+.Custom-card-drawer {
+  flex: 1;
+  max-width: 300px; /* Optional: restrict width */
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  position: sticky;
+  top: 20px; /* keeps it visible during scroll */
+}
+
+  .product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.product-card {
+  border: 1px solid #e1e1e1;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.product-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.product-title {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+.product-price {
+  color: #333;
+  font-weight: bold;
+}
+.bundle-drawer {
+  background: #f4f4f4;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.bundle-title {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.bundle-slot {
+  border: 2px dashed #ccc;
+  margin: 10px auto;
+  height: 100px;
+  width: 100px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lock-box {
+  text-align: center;
+}
+
+.lock-icon {
+  font-size: 24px;
+  display: block;
+}
+
+.discount-text {
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.bundle-save-button {
+  margin-top: 20px;
+  padding: 10px;
+  width: 100%;
+  background: #ddd;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  cursor: not-allowed;
+}
+
+</style>
+{% schema %}
+  {
+    "name": "Bundle Section",
+    "settings": [
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "Collection"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Bundle Section"
+      }
+    ]
+  }
+{% endschema %}
