@@ -1,0 +1,214 @@
+            {%- when 'variant_picker' -%}
+              {%- unless product.has_only_default_variant -%}
+                {%- if block.settings.picker_type == 'button' -%}
+                  <variant-radios
+                    class="no-js-hidden"
+                    data-section="{{ section.id }}"
+                    data-url="{{ product.url }}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {%- for option in product.options_with_values -%}
+                      <fieldset class="js product-form__input" data-product-option-group {{ option.name }}>
+                        <legend class="form__label">{{ option.name }}</legend>
+
+                        {%- for value in option.values -%}
+                          <input
+                            type="radio"
+                            id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                            name="{{ option.name }}"
+                            value="{{ value | escape }}"
+                            form="{{ product_form_id }}"
+                            class="sr-only"
+                            {% if option.selected_value == value %}
+                              checked
+                            {% endif %}
+                          >
+                          <label 
+                            for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                            data-product-option
+                            data-value="{{ value | escape }}"
+                            class="option-button{% if option.selected_value == value %} active{% endif %}">
+                            {{ value }}
+                          </label>
+                        {%- endfor -%}
+                      </fieldset>
+                    {%- endfor -%}
+
+                    <script type="application/json">
+                      {{ product.variants | json }}
+                    </script>
+                  </variant-radios>
+                {%- else -%}
+                  <variant-selects
+                    class="no-js-hidden"
+                    data-section="{{ section.id }}"
+                    data-url="{{ product.url }}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {%- for option in product.options_with_values -%}
+                      <div class="product-form__input product-form__input--dropdown">
+                        <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+                          {{ option.name }}
+                        </label>
+                        <div class="select">
+                          <select
+                            id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                            class="select__select"
+                            name="options[{{ option.name | escape }}]"
+                            form="{{ product_form_id }}"
+                          >
+                            {%- for value in option.values -%}
+                              <option
+                                value="{{ value | escape }}"
+                                {% if option.selected_value == value %}
+                                  selected="selected"
+                                {% endif %}
+                              >
+                                {{ value }}
+                              </option>
+                            {%- endfor -%}
+                          </select>
+                          {% render 'icon-caret' %}
+                        </div>
+                      </div>
+                    {%- endfor -%}
+
+                    <script type="application/json">
+                      {{ product.variants | json }}
+                    </script>
+                  </variant-selects>
+                {%- endif -%}
+              {%- endunless -%}
+
+              <noscript class="product-form__noscript-wrapper-{{ section.id }}">
+                <div class="product-form__input{% if product.has_only_default_variant %} hidden{% endif %}">
+                  <label class="form__label" for="Variants-{{ section.id }}">
+                    {{- 'products.product.product_variants' | t -}}
+                  </label>
+                  <div class="select">
+                    <select
+                      name="id"
+                      id="Variants-{{ section.id }}"
+                      class="select__select"
+                      form="{{ product_form_id }}"
+                    >
+                     {% for variant in product.variants %}
+  <option
+                       {% if variant == product.selected_or_first_avaliable_variant %}
+                         selected="selected"
+                         {% endif %}
+    {% if variant.available == false %}
+      disabled
+      {% endif %}
+    value="{{ variant.id }}"
+                       >
+    {{ variant.title }}
+    {%- if variant.available == false %} - {{ 'prodcuts.product.sold_out' | t }}{% endif %}
+    - {{ variant.price | money | strip_html }}
+                       </option>
+{% endfor %}
+                    </select>
+                    {% render 'icon-caret' %}
+                  </div>
+                </div>
+              </noscript>
+
+
+
+<script>
+  window.productVariants = {{ product.variants | json }};
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const variants = window.productVariants;
+
+  function getCurrentSelection() {
+    const groups = document.querySelectorAll("[data-product-option-group]");
+    return [...groups].map(group => {
+      const active = group.querySelector("[data-product-option].active");
+      return active ? active.dataset.value : null;
+    });
+  }
+
+ function updateOptions() {
+  const currentSelection = getCurrentSelection();
+
+  document.querySelectorAll("[data-product-option-group]").forEach((group, optionIndex) => {
+    const buttons = group.querySelectorAll("[data-product-option]");
+
+    // Check if the group (fieldset) has attribute 'diameter'
+    const isDiameterGroup = group.hasAttribute("diameter");
+
+    buttons.forEach(button => {
+      if (isDiameterGroup) {
+        // For diameter group, never disable buttons or add disabled class
+        button.classList.remove("disabled-option");
+        button.disabled = false;
+      } else {
+        const testValue = button.dataset.value;
+
+        // Create a "what if" selection with this button chosen
+        const testSelection = [...currentSelection];
+        testSelection[optionIndex] = testValue;
+
+        // Check if there is ANY variant matching this test selection
+        const possible = variants.some(variant => {
+          return testSelection.every((val, i) => !val || variant[`option${i+1}`] === val) && variant.available;
+        });
+
+        if (possible) {
+          button.classList.remove("disabled-option");
+          button.disabled = false;
+        } else {
+          button.classList.add("disabled-option");
+          button.disabled = true;
+        }
+      }
+    });
+  });
+}
+  // Handle clicks
+  document.querySelectorAll("[data-product-option]").forEach(button => {
+    button.addEventListener("click", function () {
+      const group = button.closest("[data-product-option-group]");
+
+      // Clear existing selection
+      group.querySelectorAll("[data-product-option]").forEach(b => b.classList.remove("active"));
+
+      // Mark this one active
+      button.classList.add("active");
+
+      // Update other groups
+      updateOptions();
+    });
+  });
+  // Initial run
+  updateOptions();
+});
+</script>
+<script>
+ const fieldsets = document.querySelectorAll('fieldset.js.product-form__input');
+
+fieldsets.forEach(fieldset => {
+  const legend = fieldset.querySelector('legend');
+  const pairs = [];
+  const inputs = fieldset.querySelectorAll('input[type="radio"]');
+
+  inputs.forEach(input => {
+    const label = fieldset.querySelector(`label[for="${input.id}"]`);
+    if(label) {
+      pairs.push({ input, label, value: parseInt(input.value) });
+    }
+  });
+  pairs.sort((a, b) => a.value - b.value);
+  fieldset.innerHTML = '';
+  if (legend) {
+    fieldset.appendChild(legend);
+  }
+  pairs.forEach(pair => {
+    fieldset.appendChild(pair.input);
+    fieldset.appendChild(pair.label);
+  });
+});
+
+</script>
