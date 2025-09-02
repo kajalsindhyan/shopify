@@ -1,0 +1,5 @@
+{
+  "name": "Shopify 3D Print Price Calculator",
+  "description": "An instant price calculator for custom 3D printing services directly on a Shopify product page. It calculates a model's volume, determines a price based on selected materials, and allows adding the custom-priced item to the cart with a link to the uploaded 3D file.",
+  "requestFramePermissions": []
+}
